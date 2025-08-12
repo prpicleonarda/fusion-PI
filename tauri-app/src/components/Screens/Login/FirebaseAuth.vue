@@ -46,7 +46,7 @@
   </div>
 
   <!-- User Profile -->
-  <div v-else class="user-profile">
+  <div v-else class="user-profile w-[600px]">
     <div class="user-info">
       <img
         v-if="user.photoURL"
@@ -73,7 +73,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
 import { User } from "firebase/auth";
-import { AuthService } from "../firebase";
+import { AuthService } from "../../../firebase";
 
 // Reactive data
 const user = ref<User | null>(null);
@@ -148,6 +148,7 @@ const handleSignOut = async () => {
 }
 
 .user-profile {
+  margin: 0 auto;
   background: #e8f5e8;
   padding: 25px;
   border-radius: 12px;
