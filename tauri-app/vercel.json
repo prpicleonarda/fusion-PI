@@ -16,6 +16,5 @@
         }
       ]
     }
-  ],
-  "ignoreFiles": [".env", ".env.local", ".env.*", "*.config.*", "src-tauri/**"]
+  ]
 }
