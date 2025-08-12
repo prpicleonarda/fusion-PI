@@ -12,8 +12,8 @@ import {
   limit,
   DocumentData,
   QueryConstraint,
-  DocumentReference,
-  CollectionReference,
+  // DocumentReference,
+  // CollectionReference,
 } from "firebase/firestore";
 import { db } from "./config";
 
