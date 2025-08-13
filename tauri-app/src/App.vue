@@ -1,8 +1,8 @@
 <script setup lang="ts">
 // import { ref } from "vue";
 // import { invoke } from "@tauri-apps/api/core";
-import FirebaseAuth from "./components/Screens/Login/FirebaseAuth.vue";
-import Background from "./components/background.vue";
+import FirebaseAuth from "./views/Login/FirebaseAuth.vue";
+import Background from "./components/common/background.vue";
 </script>
 
 <template>
@@ -12,7 +12,7 @@ import Background from "./components/background.vue";
     >
       <div class="flex justify-center mb-8">
         <img
-          src="/src/assets/fusion.png"
+          src="/src/assets/fusion.svg"
           class="logo fusion h-32 w-32"
           alt="Fusion"
         />
