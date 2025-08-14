@@ -1,14 +1,35 @@
-import { createApp } from "vue";
+import { ViteSSG } from "vite-ssg";
 import { createPinia } from "pinia";
 import App from "./App.vue";
 import "./firebase/config";
 import "./styles/global.css";
-import router from "./router/router";
+import { routes } from "./router/routes";
+import { createWebHistory } from "vue-router";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-const app = createApp(App);
+export const createApp = ViteSSG(
+  App,
+  { routes, history: createWebHistory() },
+  ({ app, router }) => {
+    const pinia = createPinia();
+    app.use(pinia);
 
-const pinia = createPinia();
+    // Only attach auth guard in client mode
+    if (!import.meta.env.SSR) {
+      router.beforeEach((to, _from, next) => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          unsubscribe();
 
-app.use(pinia);
-app.use(router);
-app.mount("#app");
+          if (to.meta.requiresAuth && !user) {
+            next("/");
+          } else if (to.name === "Home" && user) {
+            next("/dashboard");
+          } else {
+            next();
+          }
+        });
+      });
+    }
+  }
+);

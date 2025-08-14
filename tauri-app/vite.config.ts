@@ -30,4 +30,13 @@ export default defineConfig(async () => ({
       ignored: ["**/src-tauri/**"],
     },
   },
+  ssgOptions: {
+    includedRoutes() {
+      return [
+        "/", // Home
+        "/privacypolicy", // Static page
+        "/login", // Static page
+      ];
+    },
+  },
 }));
