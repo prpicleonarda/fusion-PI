@@ -17,7 +17,7 @@
   >
     <h1 class="text-3xl font-bold mb-2">Privacy Policy for Fusion PI</h1>
     <p class="text-sm text-offgray mb-6">
-      <span class="font-semibold">Last Updated:</span> [Current Date]<br />
+      <span class="font-semibold">Last Updated:</span> 14.8.2025<br />
       <span class="font-semibold">Version:</span> 1.0
     </p>
 
