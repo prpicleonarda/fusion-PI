@@ -13,7 +13,6 @@
 	.st7{fill:none;stroke:#131313;stroke-width:10;stroke-miterlimit:10;}
 	.st8{fill:none;stroke:#131313;stroke-width:6;stroke-linecap:round;stroke-miterlimit:10;}
 	.st9{stroke:#131313;stroke-miterlimit:10;}
-	.st10{fill:none;stroke:#FFFFFF;stroke-width:6;stroke-linecap:round;stroke-miterlimit:10;}
 </style>
 <g id="Layer_2">
 	<radialGradient id="SVGID_1_" cx="236.6562" cy="240.9815" r="155.1724" gradientUnits="userSpaceOnUse">
@@ -71,8 +70,5 @@
 	<circle class="st9" cx="189.1" cy="449.6" r="6.9"/>
 	<path class="st8" d="M251.1,363.6c-40.2,8.2-68.3,30.7-70.2,55.2c-0.4,4.9,0.1,11.7,4,20"/>
 	<path class="st8" d="M165.4,508.9c6.8,10.8,13.6,21.6,20.5,32.4"/>
-</g>
-<g id="Layer_6">
-	<circle class="st10" cx="311.4" cy="316.1" r="280.2"/>
 </g>
 </svg>

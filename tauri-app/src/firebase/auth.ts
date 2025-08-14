@@ -1,7 +1,7 @@
 import {
   signInWithPopup,
   GoogleAuthProvider,
-  signOut,
+  signOut as firebaseSignOut,
   onAuthStateChanged,
   User,
   UserCredential,
@@ -95,7 +95,7 @@ export class AuthService {
   // Sign out
   static async signOut(): Promise<void> {
     try {
-      await signOut(auth);
+      await firebaseSignOut(auth);
     } catch (error) {
       console.error("Error signing out:", error);
       throw error;

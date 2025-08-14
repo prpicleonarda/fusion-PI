@@ -45,25 +45,6 @@
     </button>
   </div>
 
-  <!-- User Profile -->
-  <div v-else class="user-profile w-[600px]">
-    <div class="user-info">
-      <img
-        v-if="user.photoURL"
-        :src="user.photoURL"
-        :alt="user.displayName || 'User'"
-        class="user-avatar"
-      />
-      <div class="user-details">
-        <h3>Welcome, {{ user.displayName || user.email }}!</h3>
-        <p class="user-email">{{ user.email }}</p>
-        <p v-if="isSuperAdmin" class="admin-badge">👑 Super Admin</p>
-        <p class="user-id">User ID: {{ user.uid }}</p>
-      </div>
-    </div>
-    <button @click="handleSignOut" class="signout-btn">Sign Out</button>
-  </div>
-
   <!-- Error Messages -->
   <div v-if="error" class="error-message">
     {{ error }}
@@ -71,9 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch } from "vue";
+import { useRouter } from "vue-router";
 import { User } from "firebase/auth";
 import { AuthService } from "../../firebase";
+
+const router = useRouter();
 
 // Reactive data
 const user = ref<User | null>(null);
@@ -90,16 +74,42 @@ const checkSuperAdminStatus = async () => {
   }
 };
 
+// Watch for user changes and redirect
+watch(user, async (newUser) => {
+  console.log(
+    "FirebaseAuth - User changed:",
+    newUser ? "Logged in" : "Not logged in"
+  );
+  if (newUser) {
+    console.log(
+      "FirebaseAuth - User logged in, checking super admin status..."
+    );
+    await checkSuperAdminStatus();
+    console.log("FirebaseAuth - Redirecting to dashboard...");
+    // Redirect to dashboard after successful login
+    router.push("/dashboard");
+  }
+});
+
 // Auth state listener
 let unsubscribe: (() => void) | null = null;
 
 onMounted(() => {
+  console.log("FirebaseAuth - Component mounted, setting up auth listener...");
   // Listen to auth state changes
   unsubscribe = AuthService.onAuthStateChange(async (currentUser) => {
+    console.log(
+      "FirebaseAuth - Auth state changed:",
+      currentUser ? "User logged in" : "User logged out"
+    );
     user.value = currentUser;
     if (currentUser) {
+      console.log("FirebaseAuth - Processing logged in user...");
       await checkSuperAdminStatus();
     } else {
+      console.log(
+        "FirebaseAuth - User logged out, clearing super admin status"
+      );
       isSuperAdmin.value = false;
     }
   });
@@ -115,21 +125,17 @@ onUnmounted(() => {
 // Methods
 const handleGoogleSignIn = async () => {
   try {
+    console.log("FirebaseAuth - Starting Google sign in...");
     loading.value = true;
     error.value = "";
     await AuthService.signInWithGoogle();
+    console.log("FirebaseAuth - Google sign in completed successfully");
+    // Note: The redirect will happen automatically via the watch
   } catch (err: any) {
+    console.error("FirebaseAuth - Google sign in failed:", err);
     error.value = err.message || "Google sign in failed";
   } finally {
     loading.value = false;
-  }
-};
-
-const handleSignOut = async () => {
-  try {
-    await AuthService.signOut();
-  } catch (err: any) {
-    error.value = err.message || "Sign out failed";
   }
 };
 </script>
@@ -147,77 +153,6 @@ const handleSignOut = async () => {
   height: 20px;
 }
 
-.user-profile {
-  margin: 0 auto;
-  background: #e8f5e8;
-  padding: 25px;
-  border-radius: 12px;
-  border: 1px solid #c3e6c3;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.user-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.user-details h3 {
-  margin: 0 0 8px 0;
-  color: #2d5a2d;
-  font-size: 1.3rem;
-}
-
-.user-email {
-  margin: 0 0 5px 0;
-  color: #4a7c4a;
-  font-size: 0.95rem;
-}
-
-.user-id {
-  margin: 0;
-  color: #6b8e6b;
-  font-size: 0.85rem;
-  font-family: monospace;
-}
-
-.admin-badge {
-  margin: 8px 0;
-  padding: 6px 12px;
-  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-  color: white;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  display: inline-block;
-  box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
-}
-
-.signout-btn {
-  width: 100%;
-  padding: 12px 24px;
-  background: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-.signout-btn:hover {
-  background: #c82333;
-}
-
 .error-message {
   background: #f8d7da;
   color: #721c24;
@@ -231,17 +166,6 @@ const handleSignOut = async () => {
 @media (max-width: 768px) {
   .auth-container {
     padding: 15px;
-  }
-
-  .user-info {
-    flex-direction: column;
-    text-align: center;
-    gap: 15px;
-  }
-
-  .user-avatar {
-    width: 80px;
-    height: 80px;
   }
 }
 </style>
